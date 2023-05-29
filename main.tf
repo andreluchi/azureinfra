@@ -17,6 +17,12 @@ resource "azurerm_app_service_plan" "example" {
   }
 }
 
+resource "azurerm_application_insights" "example" {
+  name                = "my-application-insights"
+  location            = "West US"
+  resource_group_name = azurerm_resource_group.example.name
+}
+
 resource "azurerm_function_app" "example" {
   name                      = "my-function-app"
   location                  = "West US"
@@ -27,6 +33,10 @@ resource "azurerm_function_app" "example" {
   version                   = "~3"
   dynamic "identity" {
     type = "SystemAssigned"
+  }
+  
+  app_settings = {
+    "APPINSIGHTS_INSTRUMENTATIONKEY" = azurerm_application_insights.example.instrumentation_key
   }
 }
 
@@ -49,4 +59,3 @@ resource "azurerm_sql_server" "example" {
 output "function_app_endpoint" {
   value = azurerm_function_app.example.default_hostname
 }
-
