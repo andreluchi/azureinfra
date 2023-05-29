@@ -59,3 +59,11 @@ resource "azurerm_sql_server" "example" {
 output "function_app_endpoint" {
   value = azurerm_function_app.example.default_hostname
 }
+
+# Azure DevOps pipeline steps
+steps:
+- script: |
+    terraform init
+    terraform plan
+    terraform apply -auto-approve
+  displayName: 'Run Terraform'
